@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chat App</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"
+        integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <ul id="messages"></ul>
+    <form>
+        <input placeholder="Type message here" autocomplete="off">
+        <button>Send</button>
+    </form>
+    <script>
+        const socket = io();
+
+        socket.on('connect', () => {
+            console.log('connected to server');
+        });
+
+        socket.on('disconnect', () => {
+            console.log('disconnected from server');
+        });
+
+        socket.on('chat message', (msg) => {
+            const li = document.createElement('li');
+            li.innerText = msg;
+            document.querySelector('#messages').appendChild(li);
+        });
+
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = document.querySelector('input');
+            socket.emit('chat message', input.value);
+            input.value = '';
+        });
+    </script>
+</body>
+
+</html>
